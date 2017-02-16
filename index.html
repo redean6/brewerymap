@@ -12,12 +12,13 @@
       <div class="sidebar">
         <h1>Northern Colorado Breweries</h1>
         <div>
-          <input id="on" type="button" value="Breweries On">
-          <input id="off" type="button" value="Breweries Off">
-          <ul data-bind="foreach: {data:breweries, as: 'brewery'}">
-            <li>
-              <b data-bind="text: brewery.name"></b>
-            </li>
+          <input placeholder="Where Are You Drinking?" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+          <input id="zoom" type="button" value="Zoom">
+          </div>
+          <div data-bind="foreach: {data:filteredBreweries, as: 'brewery'}">
+            
+              <p data-bind="text: brewery.name"></p>
+            
       </div>
       <div id="map"></div>
     </div>

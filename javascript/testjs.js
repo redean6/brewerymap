@@ -1,9 +1,3 @@
-
-var map;
-
-var markers = [];
-
-
 var allBreweries = {
   breweries: ko.observableArray([
       {name:"Verboten Brewing & Barrel Project", location:{lat:40.396818, lng:-105.075115 }},
@@ -29,77 +23,29 @@ allBreweries.search = ko.computed(function(){
   //console.log(allBreweries.query());
   var query = allBreweries.query().toLowerCase();
   allBreweries.filteredBreweries([]);
-  //console.log(query);
+  console.log(query);
   allBreweries.breweries().forEach(function(brewery){
     //console.log(brewery);
     //console.log(brewery.name.indexOf(query));
     var name = brewery.name.toLowerCase();
     var match = name.indexOf(query);
-    //console.log(name, query, match);
+    console.log(name, query, match);
     if (match> -1) {
       allBreweries.filteredBreweries.push(brewery);
     }
 
   });
+
 });
 
 
 
-function initMap() {
-        
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 40.3951599802915 , lng:-105.053384019708 },
-          zoom: 15
-        });
+ko.applyBindings(allBreweries);
 
-  var bounds = new google.maps.LatLngBounds();
 
-  showMarkers();
 
-  document.getElementById('zoom').addEventListener('click',showMarkers);
 
-  ko.applyBindings(allBreweries);
-}
 
-// make the markers part of breweries
 
-function showMarkers(){
 
-    function setMapOnAll(map) {
-        for (var i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
-        }
-      }
 
-      // Removes the markers from the map, but keeps them in the array.
-    function clearMarkers() {
-        setMapOnAll(null);
-      }
-
-    function deleteMarkers() {
-        clearMarkers();
-        markers = [];
-      }
-
-    deleteMarkers();
-
-  var bounds = new google.maps.LatLngBounds();
-  for (var i = 0; i < allBreweries.filteredBreweries().length; i++) {
-    var position = allBreweries.filteredBreweries()[i].location;
-    var marker = new google.maps.Marker({
-      map: map,
-      position: position,
-      id: i
-    });
-    markers.push(marker);
-
-    bounds.extend(marker.position);
-
-    //document.getElementById('on').addEventListener('click',showBreweries);
-
-    
-  };
-
-   map.fitBounds(bounds);
-
-};
