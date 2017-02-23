@@ -12,7 +12,7 @@
       <div class="sidebar">
         <h1>Northern Colorado Breweries</h1>
         <div>
-          <input placeholder="Where Are You Drinking?" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+          <input placeholder="What City Are You In?" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
           <input id="zoom" type="button" value="Zoom">
           </div>
           <div data-bind="foreach: {data:filteredBreweries, as: 'brewery'}">
@@ -23,6 +23,7 @@
       <div id="map"></div>
     </div>
     <script type="text/javascript" src="javascript/main.js"></script>
+    <script src="javascript/lib/jquery.min.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDB5j5q3rrZG1HXTWFy35P0qeZxIA-BRQo&v=3&callback=initMap">
     </script>
