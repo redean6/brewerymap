@@ -38,12 +38,10 @@ allBreweries.search = ko.computed(function(){
 
 });
 
-
-
 ko.applyBindings(allBreweries);
 
 
-
+var foursquareAPI = 'https://api.foursquare.com/v2/venues/search?ll='',-105.075115&oauth_token=BCSOWFKFE3S3YKWGBXQN0YN0OGF4KCEDPGGMK2KAOLQKOG3R&v=201'
 
 
 

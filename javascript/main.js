@@ -7,7 +7,7 @@ var markers = [];
 var allBreweries = {
   breweries: ko.observableArray([
       {name:"Verboten Brewing & Barrel Project", location:{lat:40.396818, lng:-105.075115}, city:'Loveland'},
-      {name:"Grimm Brothers Brewing", location:{lat:40.396763 , lng:-105.046949}, city: 'Loveland'},
+      {name:"Grimm Brothers Brewhouse", location:{lat:40.396763 , lng:-105.046949}, city: 'Loveland'},
       {name:"Loveland Ale Works", location:{lat:40.395281 , lng:-105.077335}, city: 'Loveland'},
       {name:"City Star Brewing", location:{lat:40.305052 , lng:-105.078952}, city: 'Berthoud'},
       {name:"Left Hand Brewing", location:{lat:40.158286 , lng:-105.115023}, city: 'Longmont'},
@@ -112,17 +112,58 @@ function showMarkers(){
 
     });
 
-   // 1. apiData will get me the venue ID with response.venues.id
-   // 2. fourSquareHours needs the venue ID where indicated
-  function apiData(marker){
-  		console.log(marker.lat,marker.lng);
-  	    var fourSquareAPI = 'https://api.foursquare.com/v2/venues/search?ll='+marker.lat+','+marker.lng+'&oauth_token=NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP&v=201'
-  	    console.log(fourSquareAPI);
-  	    //var fourSquareHours= 'https://api.foursquare.com/v2/venues/'+ fourSquareAPI.response.venues.id +'/hours?oauth_token=NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP&v=20170223'
-    $getJSON(fourSquareAPI, function(data){
-    	console.log(data.response.venues.id);
-    })
+function apiData(marker) {
+  console.log(marker.lat, marker.lng);
+  //var fourSquareAPI = 'https://api.foursquare.com/v2/venues/search?ll=' + marker.lat + ',' + marker.lng + '&oatuh_token=NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP&v=201';
+  //var fourSquareHours= 'https://api.foursquare.com/v2/venues/'+ fourSquareAPI.response.venues.id +'/hours?oauth_token=NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP&v=20170223'
+  // $.getJSON(fourSquareAPI, function(data){
+  //     console.log(data.response.venues.id);
+  // })
+
+  var CLIENT_ID = 'NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP',
+    CLIENT_SECRET = 'GODNFJRZ4M1BZCS3SVV1VIUTMWE3XFYRATBEV2NX1XNEW1UF',
+    version = '20130815',
+    city = 'San Francisco',
+    query = marker.title,
+    base_url = "https://api.foursquare.com/v2/venues",
+    lat_lng = marker.lat +','+ marker.lng;
+
+   console.log(lat_lng);
+
+  $.ajax({
+    url: base_url + '/search',
+    dataType: 'json',
+    data: {
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      ll: lat_lng,
+      v: version,
+      query: query,
+      async: true
+    }
+  }).done(function(result) {
+      console.log(result);
+      console.log(result.response.venues[0].id);
+      //getDetails(id);
+    }).fail(function(error) {
+      console.log(error);
+    });
   }
+
+  function getDetails(id) {
+    $.ajax({
+
+      
+    }).done(function(result) {
+    console.log(result);
+  }).fail(function(error) {
+    console.log(error);
+  });
+
+}
+
+
+
 
 
       function populateInfoWindow(marker, infowindow) {
@@ -148,9 +189,9 @@ function showMarkers(){
     bounds.extend(marker.position);
 
     
-  };
+  };//closes for loop
 
    map.fitBounds(bounds);
 
-  };
+  };//closes show markers
 
