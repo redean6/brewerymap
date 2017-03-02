@@ -143,26 +143,47 @@ function apiData(marker) {
     }
   }).done(function(result) {
       console.log(result);
-      console.log(result.response.venues[0].id);
-      //getDetails(id);
+      //console.log(result.response.venues[0].id);
+      var id = result.response.venues[0].id;
+      getDetails(id);
     }).fail(function(error) {
       console.log(error);
     });
   }
 
   function getDetails(id) {
-    $.ajax({
+  	console.log(id);
+  	var CLIENT_ID = 'NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP',
+    	CLIENT_SECRET = 'GODNFJRZ4M1BZCS3SVV1VIUTMWE3XFYRATBEV2NX1XNEW1UF',
+    	version = '20130815',
+    	hours_url = "https://api.foursquare.com/v2/venues/"+id+"/hours",
+    	lat_lng = marker.lat +','+ marker.lng;
 
+    $.ajax({
+    url: hours_url,
+    dataType: 'json',
+    data: {
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      v: version
+    }
       
-    }).done(function(result) {
-    console.log(result);
+    }).done(function(hourResult) {
+    console.log(hourResult);
+
+    //console.log(result.response.hours.timeframes);
+
+    //var timeframes = result.response.hours.timeframes;
+
+    //console.log(timeframes);
+
   }).fail(function(error) {
     console.log(error);
   });
 
+  //Create a function here that iterates over the timeframe array. 
+  
 }
-
-
 
 
 
