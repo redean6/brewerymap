@@ -91,6 +91,8 @@ function showMarkers(){
 
     var infoWindow = new google.maps.InfoWindow()
 
+    var hereNow
+
 
 
   var bounds = new google.maps.LatLngBounds();
@@ -145,6 +147,8 @@ function apiData(marker) {
       console.log(result);
       //console.log(result.response.venues[0].id);
       var id = result.response.venues[0].id;
+      var hereNow = result.response.venues[0].hereNow.count;
+      //console.log(hereNow);
       getDetails(id);
     }).fail(function(error) {
       console.log(error);
@@ -182,12 +186,13 @@ function apiData(marker) {
   });
 
   //Create a function here that iterates over the timeframe array. 
-  
+
 }
 
 
 
       function populateInfoWindow(marker, infowindow) {
+      	
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
           infowindow.marker = marker;
