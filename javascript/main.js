@@ -241,8 +241,9 @@ function showMarkers() {
         //console.log(result.response.venues[0].id);
         var id = result.response.venues[0].id;
         var hereNow = result.response.venues[0].hereNow.count;
+        var name = result.response.venues.[0].name;
         //console.log(hereNow);
-        allBreweries.infoWindowContent('<p>People here right now: ' + hereNow + '</p>' );
+        allBreweries.infoWindowContent('<h6>'+ name + '</h6> ' +'<p>People here right now: ' + hereNow + '</p>' );
         //var test = Math.random();
 
         //allBreweries.infoWindowContent('<p>People here right now: ' + test + '</p>');
