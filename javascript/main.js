@@ -108,6 +108,13 @@ var allBreweries = {
   ])
 };
 
+allBreweries.activateMarker = function(brewery){
+	//console.log('activateMarker');
+	console.log(brewery);
+	google.maps.event.trigger(brewery.marker, 'click')
+};
+
+
 allBreweries.query = ko.observable('');
 
 allBreweries.filteredBreweries = ko.observableArray([]);
@@ -195,18 +202,18 @@ function showMarkers() {
 
   allBreweries.infoWindow = infoWindow;
 
-  var hereNow
+
 
 
 
   var bounds = new google.maps.LatLngBounds();
-  for (var i = 0; i < allBreweries.filteredBreweries().length; i++) {
-    var position = allBreweries.filteredBreweries()[i].location;
-    var breweryCity = allBreweries.filteredBreweries()[i].city;
-    var breweryName = allBreweries.filteredBreweries()[i].name;
-    var brewerylat = allBreweries.filteredBreweries()[i].location.lat;
-    var brewerylng = allBreweries.filteredBreweries()[i].location.lng;
-    var breweryid = allBreweries.filteredBreweries()[i].id;
+  for (var i = 0; i < allBreweries.breweries().length; i++) {
+    var position = allBreweries.breweries()[i].location;
+    var breweryCity = allBreweries.breweries()[i].city;
+    var breweryName = allBreweries.breweries()[i].name;
+    var brewerylat = allBreweries.breweries()[i].location.lat;
+    var brewerylng = allBreweries.breweries()[i].location.lng;
+    var breweryid = allBreweries.breweries()[i].id;
     var marker = new google.maps.Marker({
       map: map,
       position: position,
@@ -220,6 +227,10 @@ function showMarkers() {
 
 
     });
+
+    allBreweries.breweries()[i].marker = marker; 
+
+
 
     function apiData(marker) {
       // console.log(marker.lat, marker.lng);
@@ -327,6 +338,10 @@ function showMarkers() {
 
   }; //closes for loop
 
+  allBreweries.breweries().forEach(function(brewery){
+  	allBreweries.filteredBreweries.push(brewery);
+  	  })
+
   map.fitBounds(bounds);
 
 }; //closes show markers
@@ -341,7 +356,11 @@ function populateInfoWindow(marker, infoWindow, currentContent) {
     infoWindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed.
     infoWindow.addListener('closeclick', function() {
-      infoWindow.marker = null;
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setAnimation(null);
+        };
+        infoWindow.marker = null;
+
     });
   }
 }
