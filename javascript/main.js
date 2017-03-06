@@ -206,7 +206,7 @@ function showMarkers() {
 
 
 
-  var bounds = new google.maps.LatLngBounds();
+
   for (var i = 0; i < allBreweries.breweries().length; i++) {
     var position = allBreweries.breweries()[i].location;
     var breweryCity = allBreweries.breweries()[i].city;
@@ -333,18 +333,19 @@ function showMarkers() {
 
 
 
-    bounds.extend(marker.position);
-
-
   }; //closes for loop
 
-  allBreweries.breweries().forEach(function(brewery){
-  	allBreweries.filteredBreweries.push(brewery);
-  	  })
+  // allBreweries.breweries().forEach(function(brewery){
+  // 	allBreweries.filteredBreweries.push(brewery);
+  // 	  }) I already have this I think in line 146
 
-  map.fitBounds(bounds);
 
 }; //closes show markers
+
+  var bounds = new google.maps.LatLngBounds();
+
+  bounds.extend(filteredBreweries().marker.location);
+  map.fitBounds(bounds);
 
 function populateInfoWindow(marker, infoWindow, currentContent) {
 
