@@ -7,6 +7,7 @@ var markers = [];
 var allBreweries = {
   breweries: ko.observableArray([{
       name: "Verboten Brewing & Barrel Project",
+      id: 'verboten',
       location: {
         lat: 40.396818,
         lng: -105.075115
@@ -15,6 +16,7 @@ var allBreweries = {
     },
     {
       name: "Grimm Brothers Brewhouse",
+      id: 'grimm',
       location: {
         lat: 40.396763,
         lng: -105.046949
@@ -23,6 +25,7 @@ var allBreweries = {
     },
     {
       name: "Loveland Ale Works",
+      id: 'works',
       location: {
         lat: 40.395281,
         lng: -105.077335
@@ -31,6 +34,7 @@ var allBreweries = {
     },
     {
       name: "City Star Brewing",
+      id: 'star',
       location: {
         lat: 40.305052,
         lng: -105.078952
@@ -39,6 +43,7 @@ var allBreweries = {
     },
     {
       name: "Left Hand Brewing",
+      id: 'left',
       location: {
         lat: 40.158286,
         lng: -105.115023
@@ -47,6 +52,7 @@ var allBreweries = {
     },
     {
       name: "High Hops Brewing",
+      id: "hops",
       location: {
         lat: 40.480687,
         lng: -104.935613
@@ -55,6 +61,7 @@ var allBreweries = {
     },
     {
       name: "New Belgium Brewing",
+      id: 'belgium',
       location: {
         lat: 40.592796,
         lng: -105.068601
@@ -63,6 +70,7 @@ var allBreweries = {
     },
     {
       name: "Odell Brewing",
+      id: 'odell',
       location: {
         lat: 40.589467,
         lng: -105.063182
@@ -71,6 +79,7 @@ var allBreweries = {
     },
     {
       name: "Horse & Dragon Brewing",
+      id:'horse',
       location: {
         lat: 40.589644,
         lng: -105.045623
@@ -79,6 +88,7 @@ var allBreweries = {
     },
     {
       name: "Zwei Brothers Brewing",
+      id: 'zwei',
       location: {
         lat: 40.522753,
         lng: -105.078360
@@ -87,6 +97,7 @@ var allBreweries = {
     },
     {
       name: "Avery Brewing",
+      id: 'Avery',
       location: {
         lat: 40.062563,
         lng: -105.204743
@@ -195,15 +206,18 @@ function showMarkers() {
     var breweryName = allBreweries.filteredBreweries()[i].name;
     var brewerylat = allBreweries.filteredBreweries()[i].location.lat;
     var brewerylng = allBreweries.filteredBreweries()[i].location.lng;
+    var breweryid = allBreweries.filteredBreweries()[i].id;
     var marker = new google.maps.Marker({
       map: map,
       position: position,
       id: i,
+      animation: google.maps.Animation.DROP,
       icon: 'images/bar.png',
       title: breweryName,
       city: breweryCity,
       lat: brewerylat,
       lng: brewerylng
+
 
     });
 
@@ -243,7 +257,7 @@ function showMarkers() {
         var hereNow = result.response.venues[0].hereNow.count;
         //console.log(hereNow);
         var name = result.response.venues[0].name;
-        allBreweries.infoWindowContent('<h6>' + name + '</h6>' + '<p>People here right now: ' + hereNow + '</p>' );
+        allBreweries.infoWindowContent('<h4>' + name + '</h4>' + '<h5>Four Square Members here: ' + hereNow + '</h5>' );
         //var test = Math.random();
 
         //allBreweries.infoWindowContent('<p>People here right now: ' + test + '</p>');
@@ -293,10 +307,20 @@ function showMarkers() {
     markers.push(marker);
 
     marker.addListener('click', function() {
-      //populateInfoWindow(this, infoWindow);
-      allBreweries.activeMarker = this;
-      apiData(this);
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setAnimation(null);
+        };
+
+        allBreweries.activeMarker = this;
+        apiData(this);
+        if (this.getAnimation() !== null) {
+            this.setAnimation(null);
+        } else {
+            this.setAnimation(google.maps.Animation.BOUNCE);
+        }
     });
+
+
 
     bounds.extend(marker.position);
 
@@ -312,7 +336,7 @@ function populateInfoWindow(marker, infoWindow, currentContent) {
   // Check to make sure the infowindow is not already opened on this marker.
   if (infoWindow.marker != marker) {
     infoWindow.marker = marker;
-    infoWindow.setContent('<div >' + marker.title + '</div>' + '<div>' + marker.lat + '</div>' + '<div>' + marker.lng + '</div>' + '<div id="here"> ' + currentContent + '</div>');
+    infoWindow.setContent('<div id="here"> ' + currentContent + '</div>');
     //infoWindow.setContent(currentContent);
     infoWindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed.
