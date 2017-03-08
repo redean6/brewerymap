@@ -15,11 +15,11 @@
           <input placeholder="What City Are You In?" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
           <input id="zoom" type="button" value="Zoom">
           </div>
-          <div data-bind="foreach: {data:filteredBreweries, as: 'brewery'}">
+          <ul data-bind="foreach: {data:filteredBreweries, as: 'brewery'}">
             
-              <p data-bind="text: brewery.name"></p>
+              <li data-bind="click: $root.activateMarker, text: brewery.name, attr: {'id': brewery.id }"></li>
             
-      </div>
+      </ul>
       <div id="map"></div>
     </div>
     <script type="text/javascript" src="javascript/main.js"></script>
