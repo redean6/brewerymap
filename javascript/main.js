@@ -1,4 +1,3 @@
-
 var map;
 
 var markers = [];
@@ -104,23 +103,21 @@ var allBreweries = {
             },
             city: 'Boulder'
         }
-        //One Day....Mean Dean Brewing coming soon...
+         //One Day....Mean Dean Brewing coming soon...
         // {
-        // 	name:"Mean Dean Brewing", 
-        // 	location:{
-        // 		lat:40.3951599, 
-        // 		lng:-105.0533840
-        // 	}, 
-        // 	city: 'Loveland'
+        //  name:"Mean Dean Brewing", 
+        //  location:{
+        //    lat:40.3951599, 
+        //    lng:-105.0533840
+        //  }, 
+        //  city: 'Loveland'
         // }
     ])
 };
 
-//Activates the marker when a list item is clicked. 
 allBreweries.activateMarker = function(brewery) {
     google.maps.event.trigger(brewery.marker, 'click')
 };
-
 
 allBreweries.query = ko.observable('');
 
@@ -133,6 +130,7 @@ allBreweries.infoWindow = null;
 
 //Sets API content in the infoWindows
 allBreweries.infoWindowContentChanged = ko.computed(function() {
+    console.log(allBreweries.infoWindowContent());
     if (allBreweries.activeMarker) {
         populateInfoWindow(allBreweries.activeMarker, allBreweries.infoWindow, allBreweries.infoWindowContent());
     }
@@ -151,8 +149,6 @@ allBreweries.search = ko.computed(function() {
     });
 });
 
-
-
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -162,6 +158,8 @@ function initMap() {
         },
         zoom: 15
     });
+
+    var bounds = new google.maps.LatLngBounds();
 
     showMarkers();
 
@@ -215,18 +213,16 @@ function showMarkers() {
         });
 
         allBreweries.breweries()[i].marker = marker;
-
 //Sets bounds so it is zoomed over all the breweries in the beginning. 
         bounds.extend(allBreweries.breweries()[i].location);
         map.fitBounds(bounds);
-
-
 
         function apiData(marker) {
 //searches for the breweries on fourSquare
             var CLIENT_ID = 'NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP',
                 CLIENT_SECRET = 'GODNFJRZ4M1BZCS3SVV1VIUTMWE3XFYRATBEV2NX1XNEW1UF',
                 version = '20130815',
+                city = 'San Francisco',
                 query = marker.title,
                 base_url = "https://api.foursquare.com/v2/venues",
                 lat_lng = marker.lat + ',' + marker.lng;
@@ -248,9 +244,10 @@ function showMarkers() {
                 var hereNow = result.response.venues[0].hereNow.count;
                 var name = result.response.venues[0].name;
                 allBreweries.infoWindowContent('<h4>' + name + '</h4>' + '<h5>Four Square Members here: ' + hereNow + '</h5>');
+
             }).fail(function(error) {
                 console.log(error);
-                allBreweries.infoWindowContent('<h4>' + breweryName + '</h4>' + '<h5>Four Square Members here: ' + 'We are having a little trouble, try again later.' + '</h5>');
+                 //allBreweries.infoWindowContent('<h4>' + breweryName + '</h4>' + '<h5>Four Square Members here: ' + 'We are having a little trouble, try again later.' + '</h5>');
             });
         }
 
@@ -272,6 +269,8 @@ function showMarkers() {
             }
         });
 
+
+
     }; 
 
 }; 
@@ -285,7 +284,7 @@ function currentBounds() {
     map.fitBounds(currentBounds);
 
 };
-//fills the infoWindow, closes when done.
+//function that is connected to the zoom button chaning the bounds to zoom over a city
 function populateInfoWindow(marker, infoWindow, currentContent) {
 
     if (infoWindow.marker != marker) {
