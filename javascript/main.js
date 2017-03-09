@@ -130,7 +130,6 @@ allBreweries.infoWindow = null;
 
 //Sets API content in the infoWindows
 allBreweries.infoWindowContentChanged = ko.computed(function() {
-    console.log(allBreweries.infoWindowContent());
     if (allBreweries.activeMarker) {
         populateInfoWindow(allBreweries.activeMarker, allBreweries.infoWindow, allBreweries.infoWindowContent());
     }
@@ -239,7 +238,6 @@ function showMarkers() {
                     async: true
                 }
             }).done(function(result) {
-                console.log(result);
                 var id = result.response.venues[0].id;
                 var hereNow = result.response.venues[0].hereNow.count;
                 var name = result.response.venues[0].name;
