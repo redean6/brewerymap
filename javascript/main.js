@@ -247,7 +247,7 @@ function showMarkers() {
 
             }).fail(function(error) {
                 console.log(error);
-                 //allBreweries.infoWindowContent('<h4>' + breweryName + '</h4>' + '<h5>Four Square Members here: ' + 'We are having a little trouble, try again later.' + '</h5>');
+                 allBreweries.infoWindowContent('<h4>' + breweryName + '</h4>' + '<h5>Four Square Members here: ' + 'We are having a little trouble, try again later.' + '</h5>');
             });
         }
 
