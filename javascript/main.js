@@ -130,6 +130,7 @@ allBreweries.infoWindow = null;
 
 //Sets API content in the infoWindows
 allBreweries.infoWindowContentChanged = ko.computed(function() {
+    allBreweries.infoWindowContent();
     if (allBreweries.activeMarker) {
         populateInfoWindow(allBreweries.activeMarker, allBreweries.infoWindow, allBreweries.infoWindowContent());
     }
