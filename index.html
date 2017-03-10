@@ -13,7 +13,7 @@
         <h1>Northern Colorado Breweries</h1>
         <div>
           <input placeholder="What City Are You In?" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
-          <input id="zoom" type="button" value="Zoom">
+          <input id="zoom" type="button" value="Zoom" data-bind="click: zoomButton">
           </div>
           <ul data-bind="foreach: {data:filteredBreweries, as: 'brewery'}">
             

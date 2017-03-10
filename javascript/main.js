@@ -103,7 +103,7 @@ var allBreweries = {
             },
             city: 'Boulder'
         }
-         //One Day....Mean Dean Brewing coming soon...
+        //One Day....Mean Dean Brewing coming soon...
         // {
         //  name:"Mean Dean Brewing", 
         //  location:{
@@ -116,7 +116,11 @@ var allBreweries = {
 };
 
 allBreweries.activateMarker = function(brewery) {
-    google.maps.event.trigger(brewery.marker, 'click')
+    google.maps.event.trigger(brewery.marker, 'click');
+};
+//Connects the zoom button to currentBounds Functions
+allBreweries.zoomButton = function(){
+	currentBounds();
 };
 
 allBreweries.query = ko.observable('');
@@ -147,6 +151,7 @@ allBreweries.search = ko.computed(function() {
         }
 
     });
+    newVisible();
 });
 
 function initMap() {
@@ -163,36 +168,26 @@ function initMap() {
 
     showMarkers();
 
-    document.getElementById('zoom').addEventListener('click', currentBounds);
-
     ko.applyBindings(allBreweries);
 }
 //Reads informatiion from original array create the set of markers that will apper on the map. 
 function showMarkers() {
 
-    function setMapOnAll(map) {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
-        }
-    }
 
-    function clearMarkers() {
-        setMapOnAll(null);
-    }
 
-    function deleteMarkers() {
-        clearMarkers();
-        markers = [];
-    }
-//We want to make sure there are no markers already up. 
-    deleteMarkers();
+    // function deleteMarkers() {
+    //     clearMarkers();
+    //     markers = [];
+    // }
+    // //We want to make sure there are no markers already up. 
+    //deleteMarkers();
 
     var infoWindow = new google.maps.InfoWindow();
 
     allBreweries.infoWindow = infoWindow;
 
     var bounds = new google.maps.LatLngBounds();
-//Creates a marker object for each brewery
+    //Creates a marker object for each brewery
     for (var i = 0; i < allBreweries.breweries().length; i++) {
         var position = allBreweries.breweries()[i].location;
         var breweryCity = allBreweries.breweries()[i].city;
@@ -213,66 +208,81 @@ function showMarkers() {
         });
 
         allBreweries.breweries()[i].marker = marker;
-//Sets bounds so it is zoomed over all the breweries in the beginning. 
+        //Sets bounds so it is zoomed over all the breweries in the beginning. 
         bounds.extend(allBreweries.breweries()[i].location);
         map.fitBounds(bounds);
 
-        function apiData(marker) {
-//searches for the breweries on fourSquare
-            var CLIENT_ID = 'NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP',
-                CLIENT_SECRET = 'GODNFJRZ4M1BZCS3SVV1VIUTMWE3XFYRATBEV2NX1XNEW1UF',
-                version = '20130815',
-                city = 'San Francisco',
-                query = marker.title,
-                base_url = "https://api.foursquare.com/v2/venues",
-                lat_lng = marker.lat + ',' + marker.lng;
-
-            $.ajax({
-                url: base_url + '/search',
-                dataType: 'json',
-                data: {
-                    client_id: CLIENT_ID,
-                    client_secret: CLIENT_SECRET,
-                    ll: lat_lng,
-                    v: version,
-                    query: query,
-                    async: true
-                }
-            }).done(function(result) {
-                var id = result.response.venues[0].id;
-                var hereNow = result.response.venues[0].hereNow.count;
-                var name = result.response.venues[0].name;
-                allBreweries.infoWindowContent('<h4>' + name + '</h4>' + '<h5>Four Square Members here: ' + hereNow + '</h5>');
-
-            }).fail(function(error) {
-                console.log(error);
-                 allBreweries.infoWindowContent('<h4>' + breweryName + '</h4>' + '<h5>Four Square Members here: ' + 'We are having a little trouble, try again later.' + '</h5>');
-            });
-        }
-
+        apiData(marker);
         var currentContent = allBreweries.infoWindowContent();
 
         markers.push(marker);
-//Sets the animation of the markers when clicked. 
-        marker.addListener('click', function() {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setAnimation(null);
-            };
-
-            allBreweries.activeMarker = this;
-            apiData(this);
-            if (this.getAnimation() !== null) {
-                this.setAnimation(null);
-            } else {
-                this.setAnimation(google.maps.Animation.BOUNCE);
-            }
-        });
+        //Sets the animation of the markers when clicked. 
+        marker.addListener('click', animateMarker);
 
 
+    }
+}
+     function noVisible() {
+         for (var i = 0; i < markers.length; i++) {
+             markers[i].setVisible(false);
+         }
+     }
 
-    }; 
+     function newVisible() {
+         noVisible();
+         console.log(allBreweries.filteredBreweries())
+         for (var i=0; i < allBreweries.filteredBreweries().length; i++){
+         	allBreweries.filteredBreweries()[i].marker.setVisible(true);
+         }
+     }
 
-}; 
+function animateMarker() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setAnimation(null);
+    }
+
+    allBreweries.activeMarker = this;
+    apiData(this);
+    if (this.getAnimation() !== null) {
+        this.setAnimation(null);
+    } else {
+        this.setAnimation(google.maps.Animation.BOUNCE);
+    }
+};
+
+function apiData(marker) {
+    //searches for the breweries on fourSquare
+    var CLIENT_ID = 'NCZR4E52CTOVIW2C0HMOZLPZL3ZLOUQSUVNB55MUYBQNEVJP',
+        CLIENT_SECRET = 'GODNFJRZ4M1BZCS3SVV1VIUTMWE3XFYRATBEV2NX1XNEW1UF',
+        version = '20130815',
+        city = 'San Francisco',
+        query = marker.title,
+        base_url = "https://api.foursquare.com/v2/venues",
+        lat_lng = marker.lat + ',' + marker.lng;
+
+    $.ajax({
+        url: base_url + '/search',
+        dataType: 'json',
+        data: {
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
+            ll: lat_lng,
+            v: version,
+            query: query,
+            async: true
+        }
+    }).done(function(result) {
+        var id = result.response.venues[0].id;
+        var hereNow = result.response.venues[0].hereNow.count;
+        var name = result.response.venues[0].name;
+        allBreweries.infoWindowContent('<h4>' + name + '</h4>' + '<h5>Four Square Members here: ' + hereNow + '</h5>');
+
+    }).fail(function(error) {
+        console.log(error);
+        allBreweries.infoWindowContent('<h4>' + breweryName + '</h4>' + '<h5>Four Square Members here: ' + 'We are having a little trouble, try again later.' + '</h5>');
+    });
+}
+
 //function that is connected to the zoom button chaning the bounds to zoom over a city
 function currentBounds() {
     var currentBounds = new google.maps.LatLngBounds();
@@ -282,7 +292,7 @@ function currentBounds() {
     }
     map.fitBounds(currentBounds);
 
-};
+}
 //function that is connected to the zoom button chaning the bounds to zoom over a city
 function populateInfoWindow(marker, infoWindow, currentContent) {
 
@@ -293,13 +303,13 @@ function populateInfoWindow(marker, infoWindow, currentContent) {
         infoWindow.addListener('closeclick', function() {
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setAnimation(null);
-            };
+            }
             infoWindow.marker = null;
 
         });
     }
 }
 
-function mapError(){
-	alert("We are expeirencing technical difficulties with Google Maps. Please try again later, for now go support your local brewery")
+function mapError() {
+    alert("We are expeirencing technical difficulties with Google Maps. Please try again later, for now go support your local brewery");
 }
