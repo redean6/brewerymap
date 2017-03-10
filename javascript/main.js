@@ -299,3 +299,7 @@ function populateInfoWindow(marker, infoWindow, currentContent) {
         });
     }
 }
+
+function mapError(){
+	alert("We are expeirencing technical difficulties with Google Maps. Please try again later, for now go support your local brewery")
+}
