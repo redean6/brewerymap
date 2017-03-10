@@ -119,8 +119,8 @@ allBreweries.activateMarker = function(brewery) {
     google.maps.event.trigger(brewery.marker, 'click');
 };
 //Connects the zoom button to currentBounds Functions
-allBreweries.zoomButton = function(){
-	currentBounds();
+allBreweries.zoomButton = function() {
+    currentBounds();
 };
 
 allBreweries.query = ko.observable('');
@@ -151,6 +151,7 @@ allBreweries.search = ko.computed(function() {
         }
 
     });
+
     newVisible();
 });
 
@@ -222,19 +223,22 @@ function showMarkers() {
 
     }
 }
-     function noVisible() {
-         for (var i = 0; i < markers.length; i++) {
-             markers[i].setVisible(false);
-         }
-     }
+//Sets brewery markers as visible with the filtered Brewery array
+function noVisible() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setVisible(false);
+    }
+}
 
-     function newVisible() {
-         noVisible();
-         console.log(allBreweries.filteredBreweries())
-         for (var i=0; i < allBreweries.filteredBreweries().length; i++){
-         	allBreweries.filteredBreweries()[i].marker.setVisible(true);
-         }
-     }
+function newVisible() {
+    noVisible();
+    for (var i = 0; i < allBreweries.filteredBreweries().length; i++) {
+        var marker = allBreweries.filteredBreweries()[i].marker;
+        if (marker) {
+            allBreweries.filteredBreweries()[i].marker.setVisible(true);
+        }
+    }
+}
 
 function animateMarker() {
     for (var i = 0; i < markers.length; i++) {
@@ -248,7 +252,7 @@ function animateMarker() {
     } else {
         this.setAnimation(google.maps.Animation.BOUNCE);
     }
-};
+}
 
 function apiData(marker) {
     //searches for the breweries on fourSquare
@@ -286,7 +290,6 @@ function apiData(marker) {
 //function that is connected to the zoom button chaning the bounds to zoom over a city
 function currentBounds() {
     var currentBounds = new google.maps.LatLngBounds();
-    console.log(allBreweries.filteredBreweries());
     for (var i = 0; i < allBreweries.filteredBreweries().length; i++) {
         currentBounds.extend(allBreweries.filteredBreweries()[i].location);
     }
@@ -309,7 +312,7 @@ function populateInfoWindow(marker, infoWindow, currentContent) {
         });
     }
 }
-
+//Error report for google map api
 function mapError() {
     alert("We are expeirencing technical difficulties with Google Maps. Please try again later, for now go support your local brewery");
 }
